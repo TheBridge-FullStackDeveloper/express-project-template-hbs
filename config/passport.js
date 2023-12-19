@@ -7,7 +7,7 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: 'email', // Por defecto passport usa username y password, con esto le decimos que use email y password
-      passwordField: 'password' // Estos calores son los nombres de los valores del form de login o register
+      passwordField: 'password' // Estos valores son los nombres de los valores del form de login o register
     },
     async (email, password, done) => {
       try {

@@ -3,7 +3,7 @@ const isAuthenticated = require('../middlewares/isAuthenticated');
 describe('isAuthenticated Middleware', () => {
   it('should call next() if user is authenticated', () => {
     const req = {
-      user: {} // Simulating an authenticated user
+      user: {}
     };
     const res = {
       redirect: jest.fn()

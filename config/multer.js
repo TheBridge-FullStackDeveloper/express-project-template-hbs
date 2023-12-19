@@ -1,4 +1,4 @@
-const multer = require('multer'); // Sin esta linea no podemos subir archivos al servidor
+const multer = require('multer');
 
 const storage = new multer.memoryStorage();
 const upload = multer({
