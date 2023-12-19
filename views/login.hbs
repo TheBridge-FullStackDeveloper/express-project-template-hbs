@@ -1,0 +1,16 @@
+<h1>Login</h1>
+<form action="/auth/login" method="post">
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+    {{#each errors}}
+        <p style="color:red">{{this}}</p>
+    {{/each}}
+</form>
+<p>No tienes una cuenta? <a href="/auth/register-page">Regístrate aquí</a></p>
