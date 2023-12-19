@@ -9,6 +9,9 @@ const session = require('express-session');
 const methodOverride = require('method-override')
 const passport = require('passport');
 
+const swaggerDocs = require('./config/swagger').swaggerDocs;
+const swaggerUi = require('./config/swagger').swaggerUi;
+
 const hbs = create({
   extname: 'hbs',
   defaultLayout: 'main',
@@ -44,6 +47,8 @@ app.use(passport.session());
 
 require('./config/passport');
 require('./config/cloudinary');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/', indexRouter);
 
