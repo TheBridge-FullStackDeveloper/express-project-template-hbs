@@ -8,6 +8,8 @@ const { create } = require('express-handlebars');
 const session = require('express-session');
 const methodOverride = require('method-override')
 const passport = require('passport');
+const pgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
 
 const swaggerDocs = require('./config/swagger').swaggerDocs;
 const swaggerUi = require('./config/swagger').swaggerUi;
@@ -21,15 +23,28 @@ const hbs = create({
 
 require('dotenv').config();
 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
 const indexRouter = require('./routes/index');
 
 const app = express();
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'SECRET',
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    store: new pgSession({
+      pool: pool,
+      tableName: 'Session',
+    }),
+    secret: process.env.SESSION_SECRET || 'SECRET',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+  })
+);
 
 // view engine setup
 app.engine('hbs', hbs.engine);
@@ -54,12 +69,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

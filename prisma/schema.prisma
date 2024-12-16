@@ -10,11 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id String @id @default(uuid())
   email String @unique
   password String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  isAdmin Boolean @default(false)
+  role Role @default(USER)
+}
+
+model Session {
+  sid     String   @id @db.VarChar(255) // Session ID
+  sess    Json     // Session data stored as JSON
+  expire  DateTime // Expiration date of the session
 }
